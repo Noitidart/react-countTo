@@ -1,6 +1,16 @@
 var CountTo = React.createClass({
+	getInitialState: function() {
+		var { mountval=0 } = this.props;
+		return {
+			val: mountval
+		}
+	},
 	componentDidMount: function() {
+		this.timeouts = [];
 		this.transition();
+	},
+	componentWillUnmount: function() {
+		this.stopall();
 	},
 	componentDidUpdate: function(prevProps) {
 		if (this.props.end !== prevProps.end) {
@@ -13,20 +23,21 @@ var CountTo = React.createClass({
 			for (var timeout of this.timeouts) {
 				clearTimeout(timeout);
 			}
-			this.timeouts = [];
 		}
+		this.timeouts = [];
 	},
 	transition: function() {
-		var { counterid, transition, duration, val, end } = this.props;
-		this.timeouts = [];
-		var steps = countToCalcSteps(duration, val, end, transition);
-		console.log('steps:', steps);
-		steps.forEach(function(step) {
-			this.timeouts.push( setTimeout(()=>store.dispatch(setCounter(counterid, step.val)), step.time) );
-		}.bind(this));
+		var { transition, duration, end } = this.props;
+		var { val } = this.state;
+		if (val !== end) {
+			var steps = countToCalcSteps(duration, val, end, transition);
+			steps.forEach(function(step) {
+				this.timeouts.push( setTimeout(()=>this.setState({val:step.val}), step.time) );
+			}.bind(this));
+		}
 	},
 	render: function() {
-		var { val } = this.props;
+		var { val } = this.state;
 		return React.createElement('span', undefined,
 			val
 		);

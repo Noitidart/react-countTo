@@ -1,17 +1,16 @@
 // ACTIONS
 const ADD_COUNTER = 'ADD_COUNTER';
 const REMOVE_COUNTER = 'REMOVE_COUNTER';
-const SET_COUNTER = 'SET_COUNTER';
 const TRANSITION_COUNTER = 'TRANSITION_COUNTER';
 
 // ACTION CREATORS
 var next_counterid = 0;
-function addCounter(transition, duration, end, val=0) {
+function addCounter(transition, duration, end, mountval=0) {
 	return {
 		type: ADD_COUNTER,
 		counterid: next_counterid++,
 		transition,
-		val,
+		mountval,
 		end,
 		duration
 	}
@@ -21,14 +20,6 @@ function removeCounter(counterid) {
 	return {
 		type: REMOVE_COUNTER,
 		counterid
-	}
-}
-
-function setCounter(counterid, val) {
-	return {
-		type: SET_COUNTER,
-		counterid,
-		val
 	}
 }
 
@@ -44,7 +35,7 @@ function transCounter(counterid, end) {
 	const initialState = {
 				counters: [
 					{
-						val - integer
+						mountval - integer
 						duration - integer(ms)
 						end - integer
 						transition - array of 4 or string linear/ease/ease-in/ease-out/ease-in-out
@@ -55,23 +46,13 @@ function transCounter(counterid, end) {
 function counters(state=[], action) {
 	switch (action.type) {
 		case ADD_COUNTER:
-			var { transition, val, end, duration, counterid } = action;
+			var { transition, mountval, end, duration, counterid } = action;
 			return [
 				...state,
-				{ transition, val, end, duration, counterid }
+				{ transition, mountval, end, duration, counterid }
 			];
 		case REMOVE_COUNTER:
 			return state.filter(counter => counter.counterid !== action.counterid);
-		case SET_COUNTER:
-			return state.map(counter => {
-				if (counter.counterid === action.counterid) {
-					return Object.assign({}, counter, {
-						val: action.val
-					});
-				} else {
-					return counter;
-				}
-			});
 		case TRANSITION_COUNTER:
 			return state.map(counter => {
 				if (counter.counterid === action.counterid) {
