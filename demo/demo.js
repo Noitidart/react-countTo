@@ -100,7 +100,7 @@ var Counters = React.createClass({
 		return React.createElement('ul', {  },
 			counters.map(counter => {
 				var { transition, duration, mountval, end, counterid } = counter;
-				return React.createElement('li', undefined,
+				return React.createElement('li', { key:counterid },
 					React.createElement('div', { style:{float:'right'} },
 						React.createElement('a', { href:'javascript:void(0)', onClick:this.remove.bind(this, counterid) }, 'Remove'),
 						' ',
