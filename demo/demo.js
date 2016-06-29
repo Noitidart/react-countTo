@@ -5,7 +5,7 @@ const TRANSITION_COUNTER = 'TRANSITION_COUNTER';
 
 // ACTION CREATORS
 var next_counterid = 0;
-function addCounter(transition, duration, end, mountval=0) {
+function addCounter(transition, duration, end, mountval=200) {
 	return {
 		type: ADD_COUNTER,
 		counterid: next_counterid++,
@@ -81,7 +81,7 @@ var unsubscribe = store.subscribe(() =>
 var App = () => {
 	return React.createElement('div', null,
 		React.createElement('div', undefined,
-			React.createElement('a', { href:'javascript:void(0)', onClick:function(){store.dispatch(addCounter('ease', 5000, 200))} }, 'Add Counter')
+			React.createElement('a', { href:'javascript:void(0)', onClick:function(){store.dispatch(addCounter([.68,-0.68,.58,1.72], 5000, 200))} }, 'Add Counter')
 		),
 		React.createElement(CountersContainer)
 	);
@@ -99,7 +99,7 @@ var Counters = React.createClass({
 
 		return React.createElement('ul', {  },
 			counters.map(counter => {
-				var { transition, duration, val, end, counterid } = counter;
+				var { transition, duration, mountval, end, counterid } = counter;
 				return React.createElement('li', undefined,
 					React.createElement('div', { style:{float:'right'} },
 						React.createElement('a', { href:'javascript:void(0)', onClick:this.remove.bind(this, counterid) }, 'Remove'),
@@ -112,7 +112,7 @@ var Counters = React.createClass({
 						' ',
 						React.createElement('a', { href:'javascript:void(0)', onClick:this.trans.bind(this, counterid, 400) }, 'Trans 400')
 					),
-					React.createElement(CountTo, { transition, duration, val, end, counterid })
+					React.createElement(CountTo, { transition, duration, mountval, end, counterid })
 				);
 			})
 		);
