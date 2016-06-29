@@ -6,14 +6,18 @@ This was inspired by [jQuery countTo](https://github.com/mhuggins/jquery-countTo
 
 Notable difference is that there are no functions to pause/stop/play the counter. This is because the design is meant to work with CSS easing functions. A `duration` in milliseconds is supplied as well as the `x2, y2` and `x3, y3` of the cubic-bezier easing function.
 
-Requirements:
+Demo
+-----
+[https://noitidart.github.io/react-countTo/demo/demo.htm](https://noitidart.github.io/react-countTo/demo/demo.htm)
+
+Requirements
 -------------
 * v15.1.0 of react.js or react-with-addons.js
   * Respective react-dom.js
 
 * **Note** I have not tested this in version of React less than v15.1.0. It will probably work.
 
-Usage:
+Usage
 ------
 There is one approaches to using this component: through `props` set on the component.
 

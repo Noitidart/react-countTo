@@ -1,6 +1,6 @@
 {
-  "name": "gulp-packer50x",
-  "version": "1.0.0",
+  "name": "react-countTo",
+  "version": "1.0.1",
   "description": " A React component that will count up (or down) to a target number with a specified cubic-bezier timing function in a sepecified amount of time.",
   "main": "index.js",
   "scripts": {
@@ -18,5 +18,5 @@
   "bugs": {
     "url": "https://github.com/noitidart/react-countTo/issues"
   },
-  "homepage": "https://github.com/noitidart/react-countTo#readme",
+  "homepage": "https://github.com/noitidart/react-countTo#readme"
 }
