@@ -1,11 +1,14 @@
 // ACTIONS
 const ADD_COUNTER = 'ADD_COUNTER';
 const REMOVE_COUNTER = 'REMOVE_COUNTER';
-const TRANSITION_COUNTER = 'TRANSITION_COUNTER';
+const MODIFY_COUNTER = 'MODIFY_COUNTER';
 
 // ACTION CREATORS
 var next_counterid = 0;
-function addCounter(transition, duration, end, mountval=200) {
+function addCounter(transition, duration, end, mountval) {
+	if (mountval === undefined) {
+		mountval = parseInt(document.getElementById('initial_value').value);
+	}
 	return {
 		type: ADD_COUNTER,
 		counterid: next_counterid++,
@@ -23,13 +26,15 @@ function removeCounter(counterid) {
 	}
 }
 
-function transCounter(counterid, end) {
+function modifyCounter(counterid, prop, val) {
 	return {
-		type: TRANSITION_COUNTER,
+		type: MODIFY_COUNTER,
 		counterid,
-		end
+		prop,
+		val
 	}
 }
+
 // REDUCERS
 /* state shape
 	const initialState = {
@@ -53,11 +58,12 @@ function counters(state=[], action) {
 			];
 		case REMOVE_COUNTER:
 			return state.filter(counter => counter.counterid !== action.counterid);
-		case TRANSITION_COUNTER:
+		case MODIFY_COUNTER:
+			var { counterid, prop, val } = action;
 			return state.map(counter => {
-				if (counter.counterid === action.counterid) {
+				if (counter.counterid === counterid) {
 					return Object.assign({}, counter, {
-						end: action.end
+						[prop]: val
 					});
 				} else {
 					return counter;
@@ -81,7 +87,22 @@ var unsubscribe = store.subscribe(() =>
 var App = () => {
 	return React.createElement('div', null,
 		React.createElement('div', undefined,
-			React.createElement('a', { href:'javascript:void(0)', onClick:function(){store.dispatch(addCounter([.68,-0.68,.58,1.72], 5000, 200))} }, 'Add Counter')
+			'Click "Add Counter" to add a counter. Then modify the text box value of "Count To" and hit your "Enter" key to see the change.',
+			React.DOM.br(),
+			'When you add a counter, it will count to "123" using one of three random css easing functions are ued, "ease", "ease-in", or one generated from ',
+			React.createElement('a', { href:'http://cubic-bezier.com/#0,0,.16,1.9' },
+				'cubic-bezier.com (0,0,.16,1.9)'
+			),
+			'.',
+			React.DOM.br(),
+			React.DOM.br(),
+			React.createElement('a', { href:'javascript:void(0)', onClick:()=>store.dispatch(addCounter(['linear', 'ease', [0,0,.16,1.9]][Math.floor(Math.random() * 3)], 2000, 123)) },
+				'ADD COUNTER'
+			),
+			' Initial Value: ',
+			React.createElement('input', { type:'text', id:'initial_value', defaultValue:'100' }),
+			React.DOM.br(),
+			React.DOM.br()
 		),
 		React.createElement(CountersContainer)
 	);
@@ -91,8 +112,21 @@ var Counters = React.createClass({
 	remove: function(counterid) {
 		store.dispatch(removeCounter(counterid));
 	},
-	trans: function(counterid, val) {
-		store.dispatch(transCounter(counterid, val));
+	modify: function(counterid, prop, e) {
+		var input = e.target;
+		var val;
+		if (input.value.includes(',')) {
+			// if they have comma, then it is probably 4 numbers for css easing params
+			val = input.value.split(',').map(el=>parseFloat(el));
+		} else {
+			val = input.value;
+		}
+		store.dispatch(modifyCounter(counterid, prop, val));
+	},
+	keydown: function(e) {
+		if (e.keyCode == 13) {
+			e.target.blur();
+		}
 	},
 	render: function() {
 		var { counters } = this.props; // redux
@@ -101,16 +135,14 @@ var Counters = React.createClass({
 			counters.map(counter => {
 				var { transition, duration, mountval, end, counterid } = counter;
 				return React.createElement('li', { key:counterid },
-					React.createElement('div', { style:{float:'right'} },
+					React.createElement('div', { style:{float:'right',clear:'both'} },
 						React.createElement('a', { href:'javascript:void(0)', onClick:this.remove.bind(this, counterid) }, 'Remove'),
-						' ',
-						React.createElement('a', { href:'javascript:void(0)', onClick:this.trans.bind(this, counterid, 50) }, 'Trans 50'),
-						' ',
-						React.createElement('a', { href:'javascript:void(0)', onClick:this.trans.bind(this, counterid, 200) }, 'Trans 200'),
-						' ',
-						React.createElement('a', { href:'javascript:void(0)', onClick:this.trans.bind(this, counterid, 300) }, 'Trans 300'),
-						' ',
-						React.createElement('a', { href:'javascript:void(0)', onClick:this.trans.bind(this, counterid, 400) }, 'Trans 400')
+						' CSS Easing: ',
+						React.createElement('input', { type:'text', defaultValue:transition, onBlur:this.modify.bind(this, counterid, 'transition'), onKeyDown:this.keydown }),
+						' Count To: ',
+						React.createElement('input', { type:'text', defaultValue:end, size:6, onBlur:this.modify.bind(this, counterid, 'end'), onKeyDown:this.keydown }),
+						' Duration (ms): ',
+						React.createElement('input', { type:'text', defaultValue:duration, size:6, onBlur:this.modify.bind(this, counterid, 'duration'), onKeyDown:this.keydown })
 					),
 					React.createElement(CountTo, { transition, duration, mountval, end, counterid })
 				);
