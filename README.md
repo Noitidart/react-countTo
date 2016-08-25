@@ -10,6 +10,12 @@ Demo
 -----
 [https://noitidart.github.io/react-countTo/demo/demo.htm](https://noitidart.github.io/react-countTo/demo/demo.htm)
 
+Links
+------
+* [GitHub Repository](https://github.com/Noitidart/react-countTo)
+* [npm Package](https://www.npmjs.com/package/react-countTo)
+* [React Components](http://react-components.com/component/react-color)
+
 Requirements
 -------------
 * v15.1.0 of react.js or react-with-addons.js
