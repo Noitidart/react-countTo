@@ -8,6 +8,7 @@ Notable difference is that there are no functions to pause/stop/play the counter
 
 Demo
 -----
+###### Requires ES6 compatible browser like Firefox 45+
 [https://noitidart.github.io/react-countTo/demo/demo.htm](https://noitidart.github.io/react-countTo/demo/demo.htm)
 
 Links
@@ -20,7 +21,7 @@ Requirements
 -------------
 * v15.1.0 of react.js or react-with-addons.js
   * Respective react-dom.js
-
+* I did this in ES6 with Mozilla Firefox as a test browser, so it may need some downgrading if intended use is in a non-ES6 compatible browser
 * **Note** I have not tested this in version of React less than v15.1.0. It will probably work.
 
 Usage
